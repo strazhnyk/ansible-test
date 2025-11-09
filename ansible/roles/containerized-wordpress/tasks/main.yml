@@ -1,0 +1,7 @@
+---
+# Define blocks for each deployment environment
+- block:
+  # Task to deploy to production environment
+   - name: Deploy 
+     # Include the tasks defined in the deploy.yml file
+     include_tasks: deploy.yml

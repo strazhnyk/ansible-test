@@ -1,0 +1,10 @@
+# ping host with ansible
+---
+- name: Ping host
+  gather_facts: no
+  tasks:
+    - name: Ping host
+      ping:
+      register: result
+    - debug:
+        var: result

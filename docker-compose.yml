@@ -1,0 +1,68 @@
+version: "3"
+    
+services:
+  mysql:
+    image: mysql:8.0.32
+    container_name: "test-mysql"
+    volumes:
+      - "./data/mysql:/var/lib/mysql"
+      - "./data/dumps:/storage/dumps"
+      - "./conf/mysql/conf.d:/etc/mysql/conf.d:ro"
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    ports:
+      - "3307:3306"
+    networks:
+      - "back"
+  
+  wordpress:
+    depends_on:
+      - mysql
+    image: "wordpress:latest"
+    container_name: "test-wordpress"
+    volumes:
+      - "www:/var/www/html"
+      - "./uploads:/var/www/html/wp-content/uploads:rw"
+      - "./conf/php/wordpress.ini:/usr/local/etc/php/conf.d/wordpress.ini:ro"
+    ports:
+      - "9000"
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    networks:
+      - "front"
+      - "back"
+
+  nginx:
+    image: "nginx:latest"
+    restart: unless-stopped
+    links:
+        - wordpress
+    ports:
+        - "8080:80"
+    working_dir: /var/www/html
+    volumes:
+        - "www:/var/www/html"
+        - "./uploads:/var/www/html/wp-content/uploads"
+        - "./conf/nginx/nginx.conf:/etc/nginx/nginx.conf:ro"
+        - "./conf/nginx/sites-enabled/:/etc/nginx/sites-enabled/:ro"
+        - "./conf/nginx/nginxconfig.io/:/etc/nginx/nginxconfig.io/:ro"
+        - "./conf/nginx/ssl/:/etc/nginx/ssl/:ro"
+    env_file:
+      - ./.env
+    container_name: "test-nginx"
+    healthcheck:
+        test: ["CMD", "wget", "-q", "--no-check-certificate", "--spider", "http://localhost/"]
+        interval: 10s
+        timeout: 5s
+        retries: 60
+    depends_on:
+        - wordpress
+    networks:
+      - "front"
+networks:
+  back:
+  front:
+volumes:
+  www:
