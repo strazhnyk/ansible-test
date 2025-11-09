@@ -48,7 +48,6 @@ services:
         - {{ docker_volume_name }}:/var/www/html
         - {{ deploy_dir_uploads }}:/var/www/html/wp-content/uploads
         - {{ deploy_dir_conf }}/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-        - {{ deploy_dir_conf }}/nginx/sites-enabled/:/etc/nginx/sites-enabled/:ro
         - {{ deploy_dir_conf }}/nginx/nginxconfig.io/:/etc/nginx/nginxconfig.io/:ro
         - {{ deploy_dir_conf }}/nginx/ssl/:/etc/nginx/ssl/:ro
     env_file:

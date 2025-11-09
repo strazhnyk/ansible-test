@@ -46,7 +46,6 @@ services:
         - "www:/var/www/html"
         - "./uploads:/var/www/html/wp-content/uploads"
         - "./conf/nginx/nginx.conf:/etc/nginx/nginx.conf:ro"
-        - "./conf/nginx/sites-enabled/:/etc/nginx/sites-enabled/:ro"
         - "./conf/nginx/nginxconfig.io/:/etc/nginx/nginxconfig.io/:ro"
         - "./conf/nginx/ssl/:/etc/nginx/ssl/:ro"
     env_file:
